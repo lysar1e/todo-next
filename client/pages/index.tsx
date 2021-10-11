@@ -9,36 +9,13 @@ import {URL} from "../constants/url";
 import {useState} from "react";
 import {axiosJWT} from "../utils/axios/axios";
 import {useRouter} from "next/router";
-type Props = {
-    todos: {id: number, text: string; completed: boolean; important: boolean}[];
+import {MainPage} from "../components/MainPage";
+export type MainPageProps = {
+    boards: {id: number, owner: number, name: string}[];
 }
-const Home: NextPage<Props> = ({todos}) => {
-    const router = useRouter();
-    const [text, setText] = useState("");
-    const createTodo = () => {
-        try {
-            axiosJWT.post(`${URL}/todo/create`, {text}, {withCredentials: true}).then(() => {
-                router.replace("/");
-            })
-        } catch (e) {
-            console.log(e);
-        }
-    }
-    const completeTodo = async (id: number) => {
-        await axiosJWT.patch(`${URL}/todo/complete/${id}`, {}, {withCredentials: true}).then(() => {
-            router.replace("/");
-        })
-    }
-    const importantTodo = async (id: number) => {
-        await axiosJWT.patch(`${URL}/todo/important/${id}`, {}, {withCredentials: true}).then(() => {
-            router.replace("/");
-        })
-    }
-    const removeTodo = async (id: number) => {
-        await axiosJWT.delete(`${URL}/todo/remove/${id}`, {withCredentials: true}).then(() => {
-            router.replace("/");
-        })
-    }
+const Home: NextPage<MainPageProps> = ({boards}) => {
+    console.log(boards)
+
   return (
     // <div className={styles.container}>
       <>
@@ -48,61 +25,8 @@ const Home: NextPage<Props> = ({todos}) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
     <Navbar isLogin={true} />
-          <div className='container'>
-              <div className="main-page">
-                  <h4>Добавить задачу:</h4>
-                  <form className='form form-login' onSubmit={e => e.preventDefault()}>
-                      <div className="row">
-                          <div className="input-field col s12">
-                              <input
-                                  type="text"
-                                  placeholder=''
-                                  name="input"
-                                  className='validate'
-                                  onChange={e => setText(e.target.value)}
-                                  value={text}
-                              />
-                              {/*<label htmlFor="input">Задача</label>*/}
-                          </div>
-                      </div>
-                      <div className="row">
-                          <button className='waves-effect waves-light btn blue' onClick={() => createTodo()}>
-                              Добавить
-                          </button>
-                      </div>
-                  </form>
+          <MainPage boards={boards}/>
 
-                  <h3>Активные задачи</h3>
-                  <div className="todos">
-                      {
-                          todos ? todos.map((todo, index) => {
-                              let cls = ['col todos-text'];
-
-                              if (todo.completed) {
-                                  cls.push('completed');
-                              }
-                              if (todo.important) {
-                                  cls.push('important');
-                              }
-
-
-                              return (
-                                  <div className="row flex todos-item" key={index}>
-                                      <div className="col todos-num">{index + 1}</div>
-                                      <div className={cls.join(' ')}>{todo.text}</div>
-                                      <div className="col todos-buttons">
-                                          <i className="material-icons blue-text" onClick={() => completeTodo(todo.id)}>check</i>
-                                          <i className="material-icons orange-text" onClick={() => importantTodo(todo.id)}>warning</i>
-                                          <i className="material-icons red-text" onClick={() => removeTodo(todo.id)}>delete</i>
-                                      </div>
-                                  </div>
-                              )
-                          }) : <h3>Загрузка...</h3>
-                      }
-                  </div>
-
-              </div>
-          </div>
     </>
     // </div>
   );
@@ -112,12 +36,15 @@ export default Home;
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
     async (ctx) => {
         // console.log(ctx.req.headers.cookie);
-        const res = await axios.get(`${URL}/todo/get/`, {withCredentials: true, headers: {
+        // const res = await axios.get(`${URL}/todo/get/`, {withCredentials: true, headers: {
+        //         Cookie: ctx.req.headers.cookie
+        //     }});
+        const res = await axios.get(`${URL}/board/get/`, {withCredentials: true, headers: {
                 Cookie: ctx.req.headers.cookie
             }});
-        const todos = await res.data;
+        const boards = await res.data;
         return {
-            props: {todos},
+            props: {boards},
         };
     }
 );

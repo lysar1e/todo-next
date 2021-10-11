@@ -4,7 +4,7 @@ import axios from "axios";
 import {URL} from "../constants/url";
 import {useRouter} from "next/router";
 type Props = {
-    isLogin: boolean;
+    isLogin?: boolean;
 }
 export const Navbar: React.FC<Props> = ({isLogin}) => {
     const router = useRouter();
