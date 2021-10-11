@@ -4,8 +4,8 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import {User} from "./auth/entities/user.entity";
-import { TodoModule } from './todo/todo.module';
-import {Todo} from "./todo/entities/todo.entity";
+import { BoardModule } from './board/board.module';
+import {Board} from "./board/entities/board.entity";
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -15,11 +15,11 @@ import {Todo} from "./todo/entities/todo.entity";
       username: 'yjumpshc',
       password: 'sYtJxtkosrnr5-RSZ2xkTusoDZ_GQuiU',
       database: 'yjumpshc',
-      entities: [User, Todo],
-      synchronize: true,
+      entities: [User, Board],
+      synchronize: false,
     }),
     AuthModule,
-    TodoModule,
+    BoardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
