@@ -4,9 +4,9 @@ import {axiosJWT} from "../utils/axios/axios";
 import {URL} from "../constants/url";
 import {MainPageProps} from "../pages";
 import Link from "next/link";
-export const MainPage: React.FC<MainPageProps> = ({boards}) => {
+export const MainPage: React.FC<MainPageProps> = ({boards, contributorBoards}) => {
     const [isClicked, setIsClicked] = useState(false);
-
+    console.log(contributorBoards)
     return (
         <div className="container row">
                 <h3>Мои доски</h3>
@@ -32,6 +32,34 @@ export const MainPage: React.FC<MainPageProps> = ({boards}) => {
                            )
                        })
                        : <h5>Досок нет</h5>
+                }
+            </div>
+            <h3>Доски в которых участвуешь</h3>
+            <div className="cards">
+                {
+                    contributorBoards ?
+                        <>
+                            <br/>
+                            {
+                                contributorBoards.map(item => {
+                                    return (
+                                        <div key={item.id}>
+                                            <div className="card horizontal">
+                                                <div className="card-stacked">
+                                                    <div className="card-content">
+                                                        <p>{item.name}</p>
+                                                    </div>
+                                                    <div className="card-action">
+                                                        <Link href={`/board/${item.id}`}>Перейти к доске</Link>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </>
+                        : null
                 }
             </div>
         </div>

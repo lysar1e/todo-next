@@ -3,7 +3,7 @@ import {BoardComponent} from "../../components/BoardComponent";
 import axios from "axios";
 import {URL} from "../../constants/url";
 export type BoardProps = {
-    board: {id: number, owner: number, name: string, todos: {id: number, text: string; completed: boolean; important: boolean}[]};
+    board: {id: number, owner: number, name: string, contributors: number[], generatedLink: string, todos: {id: number, text: string; completed: boolean; important: boolean}[]};
 }
 const Board: NextPage<BoardProps> = ({board}) => {
     return (

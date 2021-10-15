@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {BoardProps} from "../pages/board/[id]";
 import {useRouter} from "next/router";
 import {axiosJWT} from "../utils/axios/axios";
@@ -10,6 +10,12 @@ export const BoardComponent: React.FC<BoardProps> = ({board}) => {
     const [isLoading, setIsLoading] = useState(false);
     const id = router.query.id;
     const [text, setText] = useState("");
+    useEffect(() => {
+        if (board.generatedLink) {
+            setInviteLink(board.generatedLink);
+        }
+    }, []);
+    const [inviteLink, setInviteLink] = useState("");
     const createTodo = () => {
         try {
             setIsLoading(true);
@@ -42,11 +48,27 @@ export const BoardComponent: React.FC<BoardProps> = ({board}) => {
             setIsLoading(false);
         })
     }
+    const generateLink = () => {
+        axiosJWT.post(`${URL}/link/generate`, {boardId: id}, {withCredentials: true}).then(res => {
+            const {data} = res;
+            setInviteLink(data.to);
+        })
+    }
     return (
        <>
            <Navbar isLogin={true} />
         <div className='container'>
                        <h3>Доска {board && board.name}</h3>
+            {!inviteLink && <button className="btn" onClick={() => generateLink()}>Сгенерировать ссылку для других пользователей</button>}
+                        {
+                            inviteLink &&
+                                <>
+                            <br/>
+                            <span>Сгенерированная ссылка для того чтобы другие пользователи могли использовать эту доску:</span>
+                                    <br/>
+                            <a href={inviteLink}>{inviteLink}</a>
+                                </>
+                        }
                        <div className="main-page">
                            <h4>Добавить задачу:</h4>
                            <form className='form form-login' onSubmit={e => e.preventDefault()}>

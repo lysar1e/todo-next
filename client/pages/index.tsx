@@ -11,13 +11,11 @@ import {axiosJWT} from "../utils/axios/axios";
 import {useRouter} from "next/router";
 import {MainPage} from "../components/MainPage";
 export type MainPageProps = {
-    boards: {id: number, owner: number, name: string}[];
+    boards: {id: number, owner: number, name: string, contributors: number[]}[];
+    contributorBoards: {id: number, owner: number, name: string, contributors: number[]}[];
 }
-const Home: NextPage<MainPageProps> = ({boards}) => {
-    console.log(boards)
-
+const Home: NextPage<MainPageProps> = ({boards, contributorBoards}) => {
   return (
-    // <div className={styles.container}>
       <>
       <Head>
         <title>Страница заданий</title>
@@ -25,10 +23,8 @@ const Home: NextPage<MainPageProps> = ({boards}) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
     <Navbar isLogin={true} />
-          <MainPage boards={boards}/>
-
+          <MainPage boards={boards} contributorBoards={contributorBoards}/>
     </>
-    // </div>
   );
 };
 
@@ -42,9 +38,10 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
         const res = await axios.get(`${URL}/board/get/`, {withCredentials: true, headers: {
                 Cookie: ctx.req.headers.cookie
             }});
-        const boards = await res.data;
+        const data = await res.data;
+
         return {
-            props: {boards},
+            props: {boards: data.boards, contributorBoards: data.contributorBoards},
         };
     }
 );
