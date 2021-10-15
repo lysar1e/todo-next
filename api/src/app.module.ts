@@ -13,11 +13,11 @@ import { LinkModule } from './link/link.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'hattie.db.elephantsql.com',
+      host: 'localhost',
       port: 5432,
-      username: 'yjumpshc',
-      password: 'sYtJxtkosrnr5-RSZ2xkTusoDZ_GQuiU',
-      database: 'yjumpshc',
+      username: 'main',
+      password: 'ps',
+      database: 'main_todo',
       entities: [User, Board, Link],
       synchronize: true,
     }),
