@@ -6,6 +6,9 @@ import { AuthModule } from './auth/auth.module';
 import {User} from "./auth/entities/user.entity";
 import { BoardModule } from './board/board.module';
 import {Board} from "./board/entities/board.entity";
+import {Link} from "./link/entities/link.entity";
+import { LinkModule } from './link/link.module';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -15,11 +18,12 @@ import {Board} from "./board/entities/board.entity";
       username: 'yjumpshc',
       password: 'sYtJxtkosrnr5-RSZ2xkTusoDZ_GQuiU',
       database: 'yjumpshc',
-      entities: [User, Board],
-      synchronize: false,
+      entities: [User, Board, Link],
+      synchronize: true,
     }),
     AuthModule,
     BoardModule,
+    LinkModule,
   ],
   controllers: [AppController],
   providers: [AppService],

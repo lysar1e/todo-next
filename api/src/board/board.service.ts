@@ -12,6 +12,7 @@ import {Board} from "./entities/board.entity";
 import {CreateTodoDto} from "./dto/create-todo.dto";
 import { v4 as uuidv4 } from 'uuid';
 import {DeleteTodoDto} from "./dto/delete-todo.dto";
+import {In, Not} from "typeorm";
 
 @Injectable()
 export class BoardService {
@@ -25,7 +26,7 @@ export class BoardService {
 
     async createTodo(createTodoDto: CreateTodoDto, owner) {
         const board = await this.boardRepository.findOne(createTodoDto.boardId);
-        if (board.owner !== owner) {
+        if (!board.contributors.includes(owner) && board.owner !== owner) {
             throw new ForbiddenException("Ты не можешь создать за другого пользователя!");
         }
         const id = await uuidv4();
@@ -41,15 +42,30 @@ export class BoardService {
     }
 
  async findAll(owner: number) {
-    const boards = await this.boardRepository.find({where: {owner}});
-    return boards;
+    // const boards = await this.boardRepository.find({where: {owner}, select: ["id", "owner", "name"]});
+    // const contributorBoard = await this.boardRepository.find({ where: {contributors: In([2, 7, 9]) }})
+    //  console.log(owner);
+    //  console.log(contributorBoard)
+     const boards = await this.boardRepository.find({select: ['id', "owner", "name", 'contributors']});
+     let contBoards = [];
+     let ownerBoards = [];
+     boards.forEach(item => {
+         if (item.contributors.includes(owner)) {
+             contBoards.push(item);
+         } else if (item.owner === owner) {
+             ownerBoards.push(item);
+         }
+     });
+    return {boards: ownerBoards, contributorBoards: contBoards};
   }
 
  async findOne(id: number, owner: number) {
       const board = await this.boardRepository.findOne({where: {id}});
-      if (!board || board.owner !== owner) {
+      if (!board || board.contributors.includes(owner) === false && board.owner !== owner) {
           throw new ForbiddenException("Нет Доступа к этой доске!")
       }
+     // if (!board || board.contributors.includes(owner) === false)
+     // console.log(board.contributors.includes(owner));
       return board;
   }
 

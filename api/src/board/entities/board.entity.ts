@@ -24,5 +24,19 @@ export class Board extends BaseEntity {
         default: [],
         nullable: false,
     })
+    contributors: number[];
+
+    @Column({
+        type: "text",
+        default: "",
+        nullable: false,
+    })
+    generatedLink: string;
+
+    @Column({
+        type: "jsonb",
+        default: [],
+        nullable: false,
+    })
     todos: {id: string, text: string, completed: boolean; important: boolean}[];
 }

@@ -30,6 +30,7 @@
     "@nestjs/typeorm": "^8.0.2",
     "@types/cookie-parser": "^1.4.2",
     "@types/passport-jwt": "^3.0.6",
+    "@types/shortid": "^0.0.29",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.5",
     "passport": "^0.5.0",
@@ -38,6 +39,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
+    "shortid": "^2.2.16",
     "typeorm": "^0.2.37",
     "uuid": "^8.3.2"
   },
